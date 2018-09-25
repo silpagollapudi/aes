@@ -50,16 +50,18 @@ array = [[0, 1, 2, 3],              #  [ 0, 1, 2, 3 ]       shift = 0
          [12, 13, 14, 15]]          #  [ 15, 12, 13, 14 ]   shift = 3
 
 def main():
-    encrypt()
-    decrypt()
+    encrypt(array)
+    decrypt(array)
 
-def encrypt():
+def encrypt(array):
     subBytes(array)
+    shiftRows(array)
     #print(shiftRows(array))
 
 
-def decrypt():
+def decrypt(array):
     subBytesInv(array)
+    shiftRowsInv(array)
     #print(shiftRowsInv(array))
 
 
