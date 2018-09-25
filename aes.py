@@ -51,16 +51,16 @@ array = [[0, 1, 2, 3],              #  [ 0, 1, 2, 3 ]       shift = 0
 
 def main():
     encrypt()
-    # shiftRowsInv(array)
+    decrypt()
 
 def encrypt():
     subBytes(array)
-    shiftRows(array)
+    #print(shiftRows(array))
 
 
 def decrypt():
     subBytesInv(array)
-    shiftRowsInv(array)
+    #print(shiftRowsInv(array))
 
 
 def subBytes(array):
@@ -87,6 +87,12 @@ def shiftRows(array):
     return array
 
 def shiftRowsInv(array):
+    copyArray = deepcopy(array)
+    for r in range(4):
+        for c in range(4):
+            shift = c - r if c - r >= 0 else 4 - abs(c - r)
+            array[r][c] = copyArray[r][shift]
+    return array
 
 
 
