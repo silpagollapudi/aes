@@ -2,6 +2,7 @@
 
 import sys
 from random import randint
+from copy import deepcopy
 
 
 sbox = [
@@ -42,15 +43,44 @@ sboxInv = [
         0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d
         ]
 
+
+array = [[0, 1, 2, 3],
+         [5, 6, 7, 9],
+         [10, 11, 12, 12],
+         [13, 14, 15, 16]]
+
 def main():
-    sub_bytes()
+    subBytes(array)
+    shiftRows(array)
+    shiftRowsInv(array)
 
 
-def sub_bytes():
-    input_str = "hello world"
-    byte_array = bytearray(input_str, 'utf-8')
-    for i in range(len(byte_array)):
-        byte_array[i] = sbox[byte_array[i]]
+def subBytes(array):
+    for r in range(4):
+        for c in range(4):
+            array[r][c] = sbox[array[r][c]]
+    return array
+
+def subBytesInv(array):
+    for r in range(4):
+        for c in range(4):
+            array[r][c] = sboxInv[array[r][c]]
+    return array
+
+def shiftRows(array):
+    copyArray = deepcopy(array)
+    for c in range(4):
+        for r in range(4):
+            array[c][r] = copyArray[(r + c) % 4][r]
+    print(copyArray)
+    print(array)
+
+def shiftRowsInv(array):
+    copyArray = deepcopy(array)
+    for r in range(4):
+        for c in range(4):
+            array[r][c] = copyArray[(4- (r + c)) % 4][c]
+    return array
 
 
 
