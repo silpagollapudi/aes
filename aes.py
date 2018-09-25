@@ -44,15 +44,15 @@ sboxInv = [
         ]
 
 
-array = [[0, 1, 2, 3],
-         [5, 6, 7, 9],
-         [10, 11, 12, 12],
-         [13, 14, 15, 16]]
+array = [[0, 1, 2, 3],              #  [ 0, 1, 2, 3 ]       shift = 0 
+         [4, 5, 6, 7],              #  [ 5, 6, 7, 4 ]       shift = 1
+         [8, 9, 10, 11],            #  [ 10, 11, 8, 9 ]     shift = 2
+         [12, 13, 14, 15]]          #  [ 15, 12, 13, 14 ]   shift = 3
 
 def main():
-    subBytes(array)
+    # subBytes(array)
     shiftRows(array)
-    shiftRowsInv(array)
+    # shiftRowsInv(array)
 
 
 def subBytes(array):
@@ -69,11 +69,14 @@ def subBytesInv(array):
 
 def shiftRows(array):
     copyArray = deepcopy(array)
-    for c in range(4):
-        for r in range(4):
-            array[c][r] = copyArray[(r + c) % 4][r]
-    print(copyArray)
-    print(array)
+    for r in range(4):
+        for c in range(4):
+            if c + r < 4:
+                array[r][c] = copyArray[r][c + r]  
+            else:
+                shift = abs(4 - (c + r))
+                array[r][c] = copyArray[r][shift]
+    return array
 
 def shiftRowsInv(array):
     copyArray = deepcopy(array)
