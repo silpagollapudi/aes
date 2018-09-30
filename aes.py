@@ -49,11 +49,17 @@ array = [[0, 1, 2, 3],              #  [ 0, 1, 2, 3 ]       shift = 0
          [8, 9, 10, 11],            #  [ 10, 11, 8, 9 ]     shift = 2
          [12, 13, 14, 15]]          #  [ 15, 12, 13, 14 ]   shift = 3
 
+# array = [[43, 40, 171, 9],              #  [ 0, 1, 2, 3 ]       shift = 0
+#          [126, 174, 247, 207],              #  [ 5, 6, 7, 4 ]       shift = 1
+#          [21, 210, 21, 79],            #  [ 10, 11, 8, 9 ]     shift = 2
+#          [22, 166, 136, 60]]          #  [ 15, 12, 13, 14 ]   shift = 3
+
 def main():
     encrypt(array)
     decrypt(array)
 
 def cipher():
+    pass
 
 def encrypt(array):
     subBytes(array)
@@ -67,7 +73,8 @@ def decrypt(array):
     #print(shiftRowsInv(array))
 
 def expandKey():
-
+    pass
+    
 def getArguments():
     keySize = int(options['--keysize'])
     keyFileName = options['--keyfile']
@@ -146,6 +153,55 @@ def galoisMultiplaction(x,y):
             a ^= 0x1b
         b >>= 1
     return p % 256
+
+
+def expandKey(array, word):
+    newWord = rotWord(array, word)
+    newWord = subWord(newWord)
+    newWord = rCon(newWord, 0)
+    array = XORrcon(newWord, array)
+    print array
+
+
+def rotWord(array, word):
+    word = {}
+    copyArray = deepcopy(array)
+    lastElement = copyArray[0][3]
+    for i in range(4):
+        if i != 3:
+            word[i] = copyArray[i+1][3]
+        else:
+            word[i] = lastElement
+    return word
+
+def subWord(word):
+    for i in range(4):
+        word[i] = sbox[word[i]]
+
+    return word
+
+def rCon(word, round):
+    word[0] = 1 ^ word[0]  # round[i]
+    return word
+
+def XORrcon(word, array):
+    for c in range(4):
+        for r in range(4):
+            array[r][c] = array[r][c] ^ word[r]
+            word[r] = array[r][c]
+    return array
+
+    # def encrypt(array):
+    # word = {}
+    # for i in range(4):
+    #     word[i] = array[i][3]
+    # expandKey(array, word)
+    # # subBytes(array)
+    # # shiftRows(array)
+    # # print(shiftRows(array))
+
+#  round constants 
+#  01 02 04 08 10 20 40 80 1B 36 6C D8 AB 4D 9A
 
 
 if __name__ == "__main__":
