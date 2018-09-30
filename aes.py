@@ -74,19 +74,36 @@ def decrypt(array):
 
 def expandKey():
     pass
-    
+
+# get arguments from command line
+def getSysOptions(argv):
+    options = {}
+    # loop through arguments passed
+    while argv:
+        # if start with --
+        if argv[0][0] == '-' and argv[0][1] == '-':
+            # set equal
+            options[argv[0]] = argv[1]
+        argv = argv[1:]
+    return options
+
 def getArguments():
+    options = getSysOptions(sys.argv)
+
     keySize = int(options['--keysize'])
     keyFileName = options['--keyfile']
     inputFileName = options['--inputfile']
     outputFileName = options['--outputfile']
     mode = options['--mode']
 
-    inputFile = open(input_file_name, "rb")
-    keyFile = open(key_file_name, "rb")
-    outputFile = open(output_file_name, "wb")
+    inputFile = open(inputFileName, "rb")
 
+    keyFile = open(keyFileName, "rb")
+    outputFile = open(outputFileName, "wb")
+
+    # read inputfile into bytes
     inputBytes = bytearray(inputFile.read())
+    # red keyfile into bytes
     keyBytes = bytearray(keyFile.read())
 
 def subBytes(array):
@@ -200,7 +217,7 @@ def XORrcon(word, array):
     # # shiftRows(array)
     # # print(shiftRows(array))
 
-#  round constants 
+#  round constants
 #  01 02 04 08 10 20 40 80 1B 36 6C D8 AB 4D 9A
 
 
