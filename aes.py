@@ -55,17 +55,17 @@ array = [[0, 1, 2, 3],              #  [ 0, 1, 2, 3 ]       shift = 0
 #          [22, 166, 136, 60]]          #  [ 15, 12, 13, 14 ]   shift = 3
 
 def main():
+    keysize = sys.argv[2]
+    keyfile = sys.argv[4]
+    inputfile = sys.argv[6]
+    outputfile = sys.argv[8]
+    mode  = sys.argv[10]
     encrypt(array)
     decrypt(array)
-
-def cipher():
-    pass
 
 def encrypt(array):
     subBytes(array)
     shiftRows(array)
-    #print(shiftRows(array))
-
 
 def decrypt(array):
     subBytesInv(array)
@@ -75,36 +75,36 @@ def decrypt(array):
 def expandKey():
     pass
 
-# get arguments from command line
-def getSysOptions(argv):
-    options = {}
-    # loop through arguments passed
-    while argv:
-        # if start with --
-        if argv[0][0] == '-' and argv[0][1] == '-':
-            # set equal
-            options[argv[0]] = argv[1]
-        argv = argv[1:]
-    return options
+# # get arguments from command line
+# def getSysOptions(argv):
+#     options = {}
+#     # loop through arguments passed
+#     while argv:
+#         # if start with --
+#         if argv[0][0] == '-' and argv[0][1] == '-':
+#             # set equal
+#             options[argv[0]] = argv[1]
+#         argv = argv[1:]
+#     return options
 
-def getArguments():
-    options = getSysOptions(sys.argv)
+# def getArguments():
+#     options = getSysOptions(sys.argv)
 
-    keySize = int(options['--keysize'])
-    keyFileName = options['--keyfile']
-    inputFileName = options['--inputfile']
-    outputFileName = options['--outputfile']
-    mode = options['--mode']
+#     keySize = int(options['--keysize'])
+#     keyFileName = options['--keyfile']
+#     inputFileName = options['--inputfile']
+#     outputFileName = options['--outputfile']
+#     mode = options['--mode']
 
-    inputFile = open(inputFileName, "rb")
+#     inputFile = open(inputFileName, "rb")
 
-    keyFile = open(keyFileName, "rb")
-    outputFile = open(outputFileName, "wb")
+#     keyFile = open(keyFileName, "rb")
+#     outputFile = open(outputFileName, "wb")
 
-    # read inputfile into bytes
-    inputBytes = bytearray(inputFile.read())
-    # red keyfile into bytes
-    keyBytes = bytearray(keyFile.read())
+#     # read inputfile into bytes
+#     inputBytes = bytearray(inputFile.read())
+#     # red keyfile into bytes
+#     keyBytes = bytearray(keyFile.read())
 
 def subBytes(array):
     for r in range(4):
