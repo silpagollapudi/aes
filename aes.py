@@ -53,6 +53,8 @@ def main():
     encrypt(array)
     decrypt(array)
 
+def cipher():
+
 def encrypt(array):
     subBytes(array)
     shiftRows(array)
@@ -64,6 +66,21 @@ def decrypt(array):
     shiftRowsInv(array)
     #print(shiftRowsInv(array))
 
+def expandKey():
+
+def getArguments():
+    keySize = int(options['--keysize'])
+    keyFileName = options['--keyfile']
+    inputFileName = options['--inputfile']
+    outputFileName = options['--outputfile']
+    mode = options['--mode']
+
+    inputFile = open(input_file_name, "rb")
+    keyFile = open(key_file_name, "rb")
+    outputFile = open(output_file_name, "wb")
+
+    inputBytes = bytearray(inputFile.read())
+    keyBytes = bytearray(keyFile.read())
 
 def subBytes(array):
     for r in range(4):
@@ -96,6 +113,39 @@ def shiftRowsInv(array):
             array[r][c] = copyArray[r][shift]
     return array
 
+def mixColumns(array):
+    for i in range(4):
+        column = []
+        for j in range(4):
+            column.append(array[j * 4 * i])
+
+        tempCopy = copy(column)
+        column[0] = galoisMultiplication(tempCopy[0],2) ^ galoisMultiplication(tempCopy[3],1) ^ \
+                    galoisMultiplication(tempCopy[2],1) ^ galoisMultiplication(tempCopy[1],3)
+        column[1] = galoisMultiplication(tempCopy[1],2) ^ galoisMultiplication(tempCopy[0],1) ^ \
+                    galoisMultiplication(tempCopy[3],1) ^ galoisMultiplication(tempCopy[2],3)
+        column[2] = galoisMultiplication(tempCopy[2],2) ^ galoisMultiplication(tempCopy[1],1) ^ \
+                    galoisMultiplication(tempCopy[0],1) ^ galoisMultiplication(tempCopy[3],3)
+        column[3] = galoisMultiplication(tempCopy[3],2) ^ galoisMultiplication(tempCopy[2],1) ^ \
+                    galoisMultiplication(tempCopy[1],1) ^ galoisMultiplication(tempCopy[0],3)
+        # copy new values back
+        for j in range(4):
+            array[j * 4 * i] = column[j]
+    return array
+
+
+def galoisMultiplaction(x,y):
+    p = 0
+    hiBitSet = 0
+    for i in range(8):
+        if b & 1 == 1:
+            p ^= a
+        hiBitSet = a & 0x80
+        a <<= 1
+        if hiBitSet == 0x80:
+            a ^= 0x1b
+        b >>= 1
+    return p % 256
 
 
 if __name__ == "__main__":
