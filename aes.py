@@ -74,15 +74,15 @@ rConTable = [
 #          [8, 9, 10, 11],            #  [ 10, 11, 8, 9 ]     shift = 2
 #          [12, 13, 14, 15]]          #  [ 15, 12, 13, 14 ]   shift = 3
 
-array = [[43, 40, 171, 9],              #  [ 0, 1, 2, 3 ]       shift = 0
-         [126, 174, 247, 207],              #  [ 5, 6, 7, 4 ]       shift = 1
-         [21, 210, 21, 79],            #  [ 10, 11, 8, 9 ]     shift = 2
-         [22, 166, 136, 60]]          #  [ 15, 12, 13, 14 ]   shift = 3
+# array = [[43, 40, 171, 9],              #  [ 0, 1, 2, 3 ]       shift = 0
+#          [126, 174, 247, 207],              #  [ 5, 6, 7, 4 ]       shift = 1
+#          [21, 210, 21, 79],            #  [ 10, 11, 8, 9 ]     shift = 2
+#          [22, 166, 136, 60]]          #  [ 15, 12, 13, 14 ]   shift = 3
 
-# array =  [[0, 0, 0, 0],              #  [ 0, 1, 2, 3 ]       shift = 0
-#          [0, 0, 0, 0],              #  [ 5, 6, 7, 4 ]       shift = 1
-#          [0, 0, 0, 0],            #  [ 10, 11, 8, 9 ]     shift = 2
-#          [0, 0, 0, 0]] 
+array =  [[0, 0, 0, 0],              #  [ 0, 1, 2, 3 ]       shift = 0
+         [0, 0, 0, 0],              #  [ 5, 6, 7, 4 ]       shift = 1
+         [0, 0, 0, 0],            #  [ 10, 11, 8, 9 ]     shift = 2
+         [0, 0, 0, 0]] 
 
 def main():
     # keysize = sys.argv[2]
@@ -92,27 +92,18 @@ def main():
     # mode  = sys.argv[10]
     # encrypt(array)
     # decrypt(array)
-    # matrixList = []
-    # word = {}
-    # for i in range(4):
-    #     word[i] = array[i][3]
-
-    # expandKey(array, word, 1)
-    # matrixList.append(array)
-
-    # for i in range(4):
-    #     word[i] = array[i][3]
-
-    # expandKey(array, word, 2)
-    # matrixList.append(array)
+    array =  [[0, 0, 0, 0],              #  [ 0, 1, 2, 3 ]       shift = 0
+        [0, 0, 0, 0],              #  [ 5, 6, 7, 4 ]       shift = 1
+        [0, 0, 0, 0],            #  [ 10, 11, 8, 9 ]     shift = 2
+        [0, 0, 0, 0]]
     result = keyExpansion(array, 4, 10, 4)
-    # x = []
-    # for i in range(len(result)):
-    #     g = []
-    #     for j in range(4):
-    #         g.append(hex(result[i][j]))
-    #     x.append(g)
-    # # print x
+    array = addRoundKey(result, 0)
+    array = subBytes(array)
+    array = shiftRows(array)
+    array = mixColumns(array)
+    array = addRoundKey(result, 1)
+    print array
+
 
 def encrypt(array):
     subBytes(array)
@@ -189,34 +180,33 @@ def mixColumns(array):
     for i in range(4):
         column = []
         for j in range(4):
-            column.append(array[j * 4 * i])
-
-        tempCopy = copy(column)
+            column.append(array[j][i])
+        tempCopy = deepcopy(column)
         column[0] = galoisMultiplication(tempCopy[0],2) ^ galoisMultiplication(tempCopy[3],1) ^ \
-                    galoisMultiplication(tempCopy[2],1) ^ galoisMultiplication(tempCopy[1],3)
+                galoisMultiplication(tempCopy[2],1) ^ galoisMultiplication(tempCopy[1],3)
         column[1] = galoisMultiplication(tempCopy[1],2) ^ galoisMultiplication(tempCopy[0],1) ^ \
-                    galoisMultiplication(tempCopy[3],1) ^ galoisMultiplication(tempCopy[2],3)
+                galoisMultiplication(tempCopy[3],1) ^ galoisMultiplication(tempCopy[2],3)
         column[2] = galoisMultiplication(tempCopy[2],2) ^ galoisMultiplication(tempCopy[1],1) ^ \
-                    galoisMultiplication(tempCopy[0],1) ^ galoisMultiplication(tempCopy[3],3)
+                galoisMultiplication(tempCopy[0],1) ^ galoisMultiplication(tempCopy[3],3)
         column[3] = galoisMultiplication(tempCopy[3],2) ^ galoisMultiplication(tempCopy[2],1) ^ \
-                    galoisMultiplication(tempCopy[1],1) ^ galoisMultiplication(tempCopy[0],3)
+                galoisMultiplication(tempCopy[1],1) ^ galoisMultiplication(tempCopy[0],3)
         # copy new values back
         for j in range(4):
-            array[j * 4 * i] = column[j]
+            array[j][i] = column[j]
     return array
 
 
-def galoisMultiplaction(x,y):
+def galoisMultiplication(x, y):
     p = 0
-    hiBitSet = 0
+    bitSet = 0
     for i in range(8):
-        if b & 1 == 1:
-            p ^= a
-        hiBitSet = a & 0x80
-        a <<= 1
-        if hiBitSet == 0x80:
-            a ^= 0x1b
-        b >>= 1
+        if y & 1 == 1:
+            p ^= x
+        bitSet = x & 0x80
+        x <<= 1
+        if bitSet == 0x80:
+            x ^= 0x1b
+        y >>= 1
     return p % 256
 
 def keyExpansion(key, Nk, Nr, Nb):   # Nb = 4 size of word, Nr = 10, Nk = 4
@@ -238,11 +228,12 @@ def keyExpansion(key, Nk, Nr, Nb):   # Nb = 4 size of word, Nr = 10, Nk = 4
             newList.append(expandedKey[i-Nk][j] ^ temp[j])
         expandedKey.append(newList)
         i = i + 1
-    for line in expandedKey:
-        for i in range(len(line)):
-            line[i] = hex(line[i])
-        print line
+    # for line in expandedKey:
+    #     for i in range(len(line)):
+    #         line[i] = hex(line[i])
+    #     # print line
     return expandedKey
+
 
 def rotWord(word):
     lastElement = word[0]
@@ -262,6 +253,19 @@ def rCon(word, round):
     word[0] = word[0] ^ rConTable[round]
     return word
 
+def addRoundKey(key, round):
+    roundKey = []
+    for i in range(4):
+        roundKey.append(key[round * 4 + i])
+    arr = []
+    for i in range(4):
+        currArr = []
+        for j in range(4):
+            key[j][i] = key[j][i] ^ roundKey[j][i] 
+            currArr.append(key[j][i])
+        arr.append(currArr)
+    return arr
+    
 
 if __name__ == "__main__":
     main()
