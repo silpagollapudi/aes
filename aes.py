@@ -43,25 +43,69 @@ sboxInv = [
         0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d
         ]
 
+rConTable = [
+        0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a,
+        0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39,
+        0x72, 0xe4, 0xd3, 0xbd, 0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a,
+        0x74, 0xe8, 0xcb, 0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8,
+        0xab, 0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef,
+        0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd, 0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc,
+        0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b,
+        0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3,
+        0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd, 0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94,
+        0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20,
+        0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35,
+        0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd, 0x61, 0xc2, 0x9f,
+        0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d, 0x01, 0x02, 0x04,
+        0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63,
+        0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd,
+        0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb
+        ]
 
-array = [[0, 1, 2, 3],              #  [ 0, 1, 2, 3 ]       shift = 0
-         [4, 5, 6, 7],              #  [ 5, 6, 7, 4 ]       shift = 1
-         [8, 9, 10, 11],            #  [ 10, 11, 8, 9 ]     shift = 2
-         [12, 13, 14, 15]]          #  [ 15, 12, 13, 14 ]   shift = 3
+# array = [[0, 1, 2, 3],              #  [ 0, 1, 2, 3 ]       shift = 0
+#          [4, 5, 6, 7],              #  [ 5, 6, 7, 4 ]       shift = 1
+#          [8, 9, 10, 11],            #  [ 10, 11, 8, 9 ]     shift = 2
+#          [12, 13, 14, 15]]          #  [ 15, 12, 13, 14 ]   shift = 3
 
 # array = [[43, 40, 171, 9],              #  [ 0, 1, 2, 3 ]       shift = 0
 #          [126, 174, 247, 207],              #  [ 5, 6, 7, 4 ]       shift = 1
 #          [21, 210, 21, 79],            #  [ 10, 11, 8, 9 ]     shift = 2
 #          [22, 166, 136, 60]]          #  [ 15, 12, 13, 14 ]   shift = 3
 
+array =  [[0, 0, 0, 0],              #  [ 0, 1, 2, 3 ]       shift = 0
+         [0, 0, 0, 0],              #  [ 5, 6, 7, 4 ]       shift = 1
+         [0, 0, 0, 0],            #  [ 10, 11, 8, 9 ]     shift = 2
+         [0, 0, 0, 0]] 
+
 def main():
-    keysize = sys.argv[2]
-    keyfile = sys.argv[4]
-    inputfile = sys.argv[6]
-    outputfile = sys.argv[8]
-    mode  = sys.argv[10]
-    encrypt(array)
-    decrypt(array)
+    # keysize = sys.argv[2]
+    # keyfile = sys.argv[4]
+    # inputfile = sys.argv[6]
+    # outputfile = sys.argv[8]
+    # mode  = sys.argv[10]
+    # encrypt(array)
+    # decrypt(array)
+    # matrixList = []
+    # word = {}
+    # for i in range(4):
+    #     word[i] = array[i][3]
+
+    # expandKey(array, word, 1)
+    # matrixList.append(array)
+
+    # for i in range(4):
+    #     word[i] = array[i][3]
+
+    # expandKey(array, word, 2)
+    # matrixList.append(array)
+    result = keyExpansion(array, 4, 10, 4)
+    x = []
+    for i in range(len(result)):
+        g = []
+        for j in range(4):
+            g.append(hex(result[i][j]))
+        x.append(g)
+    # print x
 
 def encrypt(array):
     subBytes(array)
@@ -71,9 +115,6 @@ def decrypt(array):
     subBytesInv(array)
     shiftRowsInv(array)
     #print(shiftRowsInv(array))
-
-def expandKey():
-    pass
 
 # # get arguments from command line
 # def getSysOptions(argv):
@@ -171,22 +212,41 @@ def galoisMultiplaction(x,y):
         b >>= 1
     return p % 256
 
+def keyExpansion(key, Nk, Nr, Nb):   # Nb = 4 size of word, Nr = 10, Nk = 4
+    expandedKey = []        
+    expandedKey = deepcopy(key)
+    i = Nk
+    temp = [0, 0, 0, 0]
+    while (i < (Nb * (Nr + 1))):
+        temp = expandedKey[i - 1]
+        if i % Nk == 0:
+            temp = subWord(rotWord(temp))
+            temp = rCon(temp, i/Nk)
+        elif Nk > 6 and i % Nk == 4:
+            temp = subWord(temp)
+        newList = []
+        for j in range(4):
+            newList.append(expandedKey[i-Nk][j] ^ temp[j])
+        expandedKey.append(newList)
+        i = i + 1
+    print expandedKey
+    return expandedKey
 
-def expandKey(array, word):
+
+def expandKey(array, word, round):
     newWord = rotWord(array, word)
     newWord = subWord(newWord)
-    newWord = rCon(newWord, 0)
+    newWord = rCon(newWord, round)
     array = XORrcon(newWord, array)
-    print array
+    return array
 
 
-def rotWord(array, word):
-    word = {}
-    copyArray = deepcopy(array)
-    lastElement = copyArray[0][3]
+def rotWord(word):
+    # copyArray = deepcopy(array)
+    lastElement = word[0]
     for i in range(4):
         if i != 3:
-            word[i] = copyArray[i+1][3]
+            word[i] = word[i+1]
         else:
             word[i] = lastElement
     return word
@@ -194,11 +254,10 @@ def rotWord(array, word):
 def subWord(word):
     for i in range(4):
         word[i] = sbox[word[i]]
-
     return word
 
 def rCon(word, round):
-    word[0] = 1 ^ word[0]  # round[i]
+    word[0] =  word[0] ^ rConTable[round]
     return word
 
 def XORrcon(word, array):
@@ -207,15 +266,6 @@ def XORrcon(word, array):
             array[r][c] = array[r][c] ^ word[r]
             word[r] = array[r][c]
     return array
-
-    # def encrypt(array):
-    # word = {}
-    # for i in range(4):
-    #     word[i] = array[i][3]
-    # expandKey(array, word)
-    # # subBytes(array)
-    # # shiftRows(array)
-    # # print(shiftRows(array))
 
 #  round constants
 #  01 02 04 08 10 20 40 80 1B 36 6C D8 AB 4D 9A
