@@ -2,7 +2,7 @@
 
 import sys
 from random import randint
-from copy import deepcopy
+from copy import deepcopy, copy
 
 
 sbox = [
@@ -50,76 +50,50 @@ rConTable = [
     0xD4, 0xB3, 0x7D, 0xFA, 0xEF, 0xC5, 0x91, 0x39
     ]
 
-array =  [[0, 0, 0, 0],              #  [ 0, 1, 2, 3 ]       shift = 0
-         [0, 0, 0, 0],              #  [ 5, 6, 7, 4 ]       shift = 1
-         [0, 0, 0, 0],            #  [ 10, 11, 8, 9 ]     shift = 2
-         [0, 0, 0, 0]] 
+array = [[0, 0, 0, 0],              #  [ 0, 1, 2, 3 ]       shift = 0
+        [0, 0, 0, 0],              #  [ 5, 6, 7, 4 ]       shift = 1
+        [0, 0, 0, 0],            #  [ 10, 11, 8, 9 ]     shift = 2
+        [0, 0, 0, 0]] 
 
 def main():
-    # keysize = sys.argv[2]
-    # keyfile = sys.argv[4]
-    # inputfile = sys.argv[6]
-    # outputfile = sys.argv[8]
-    # mode  = sys.argv[10]
-    # encrypt(array)
-    # decrypt(array)
-    # array =  [[0, 0, 0, 0],              #  [ 0, 1, 2, 3 ]       shift = 0
-    #     [0, 0, 0, 0],              #  [ 5, 6, 7, 4 ]       shift = 1
-    #     [0, 0, 0, 0],            #  [ 10, 11, 8, 9 ]     shift = 2
-    #     [0, 0, 0, 0]]
 
-    key = [[0x2b, 0x7e, 0x15, 0x16],
-    [0x28, 0xae, 0xd2, 0xa6],
-    [0xab, 0xf7, 0x15, 0x88],
-    [0x09, 0xcf, 0x4f, 0x3c]]
+    array =  [[0, 0, 0, 0],              #  [ 0, 1, 2, 3 ]       shift = 0
+        [0, 0, 0, 0],              #  [ 5, 6, 7, 4 ]       shift = 1
+        [0, 0, 0, 0],            #  [ 10, 11, 8, 9 ]     shift = 2
+        [0, 0, 0, 0]]
 
-    array =  [[0x32, 0x43, 0xf6, 0xa8],              #  [ 0, 1, 2, 3 ]       shift = 0
-        [0x88, 0x5a, 0x30, 0x8d],             #  [ 5, 6, 7, 4 ]       shift = 1
-        [0x31, 0x31, 0x98, 0xa2],            #  [ 10, 11, 8, 9 ]     shift = 2
-        [0xe0, 0x37, 0x07, 0x34]]
+    result = keyExpansion(array, 4, 10, 4)
+    print result 
+    for i in range(10):
+        x = deepcopy(result)
 
-    result = keyExpansion(key, 4, 10, 4)
-    array = addRoundKey(array, result, 0)
-    # for line in array:
-    #     elem = []
-    #     for elems in line:
-    #         elem.append(hex(elems))
-    #     print elem
+        array = addRoundKey(array, x, i)
+        print "after addRoundKey round " + str(i)
+        printInHex(array)
 
-    for i in range(1, 10): 
-        print i
         array = subBytes(array)
-        # for line in array:
-        #     elem = []
-        #     for elems in line:
-        #         elem.append(hex(elems))
-        #     print elem
+        print "after subBytes round " + str(i)
+        printInHex(array)
+
         array = shiftRows(array)
-        # for line in array:
-        #     elem = []
-        #     for elems in line:
-        #         elem.append(hex(elems))
-        #     print elem
-        array = mixColumns(array)
-        for line in array:
-            elem = []
-            for elems in line:
-                elem.append(hex(elems))
-            print elem
-            
+        print "after shiftRows round " + str(i)
+        printInHex(array)
 
-        array = addRoundKey(array, result, i)
-        # for line in array:
-        #     elem = []
-        #     for elems in line:
-        #         elem.append(hex(elems))
-        #     print elem
+        if i != 9:
+            array = mixColumns(array)
+            print "after mixColumns round " + str(i)
+            printInHex(array)
 
-        # do one last round outside the loop
-    array = addRoundKey(array, result, i)
+    array = addRoundKey(array, x, 10)
+    print "after addRoundKey round " + str(i)
+    printInHex(array)
 
-
-
+def printInHex(arr):
+    x = ""
+    for i in range(4):
+        for j in range(4):
+            x = x + hex(arr[j][i]) + " "
+    print x   
 
 def encrypt(array):
     subBytes(array)
@@ -128,43 +102,20 @@ def encrypt(array):
 def decrypt(array):
     subBytesInv(array)
     shiftRowsInv(array)
-    #print(shiftRowsInv(array))
 
-# # get arguments from command line
-# def getSysOptions(argv):
-#     options = {}
-#     # loop through arguments passed
-#     while argv:
-#         # if start with --
-#         if argv[0][0] == '-' and argv[0][1] == '-':
-#             # set equal
-#             options[argv[0]] = argv[1]
-#         argv = argv[1:]
-#     return options
-
-# def getArguments():
-#     options = getSysOptions(sys.argv)
-
-#     keySize = int(options['--keysize'])
-#     keyFileName = options['--keyfile']
-#     inputFileName = options['--inputfile']
-#     outputFileName = options['--outputfile']
-#     mode = options['--mode']
-
-#     inputFile = open(inputFileName, "rb")
-
-#     keyFile = open(keyFileName, "rb")
-#     outputFile = open(outputFileName, "wb")
-
-#     # read inputfile into bytes
-#     inputBytes = bytearray(inputFile.read())
-#     # red keyfile into bytes
-#     keyBytes = bytearray(keyFile.read())
 
 def subBytes(array):
+    arr = deepcopy(array)
+    for i in range(4):
+        for j in range(4):
+            array[i][j] = arr[j][i]
     for r in range(4):
         for c in range(4):
             array[r][c] = sbox[array[r][c]]
+    arr2 = deepcopy(array)
+    for i in range(4):
+        for j in range(4):
+            array[i][j] = arr2[j][i]
     return array
 
 def subBytesInv(array):
@@ -241,9 +192,7 @@ def keyExpansion(key, Nk, Nr, Nb):   # Nb = 4 size of word, Nr = 10, Nk = 4
                 temp[j] = sbox[temp[j]]
         newList = []
         for j in range(4):
-            val = expandedKey[i-Nk][j] ^ temp[j]
-            val = val
-            newList.append(val)
+            newList.append(expandedKey[i-Nk][j] ^ temp[j])
         expandedKey.append(newList)
         i = i + 1
     return expandedKey
@@ -271,31 +220,24 @@ def addRoundKey(state, key, round):
     roundKey = []
     for i in range(4):
         roundKey.append(key[round * 4 + i])
-
-    for row in roundKey: 
-        rez = [[roundKey[j][i] for j in range(len(roundKey))] for i in range(len(roundKey[0]))]   
-    
-    for line in rez:
-        x = []
-        for elem in line:
-            x.append(hex(elem))
-        print x
-
     arr = []
-    for i in range(4):
+    if round == 2:
+        print roundKey
+        print state
+    for j in range(4):
         currArr = []
-        for j in range(4):
-            state[j][i] ^= rez[i][j]
-            print state[j][i]
-            currArr.append(state[j][i])
+        for i in range(4):
+            x = state[i][j] ^ roundKey[j][i]
+            currArr.append(x)
+            if round == 2:
+                print state[i][j]
+                print roundKey[j][i]
+                print hex(x)
         arr.append(currArr)
-
-    # for row in arr:
-    #     x = []
-    #     for elem in row:
-    #         x.append(hex(elem))
-    #     print x
-
+    g = deepcopy(arr)
+    for i in range(4):
+        for j in range(4):
+            arr[i][j] = g[j][i]
     return arr
     
 
