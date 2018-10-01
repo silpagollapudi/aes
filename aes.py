@@ -63,17 +63,63 @@ def main():
     # mode  = sys.argv[10]
     # encrypt(array)
     # decrypt(array)
-    array =  [[0, 0, 0, 0],              #  [ 0, 1, 2, 3 ]       shift = 0
-        [0, 0, 0, 0],              #  [ 5, 6, 7, 4 ]       shift = 1
-        [0, 0, 0, 0],            #  [ 10, 11, 8, 9 ]     shift = 2
-        [0, 0, 0, 0]]
-    result = keyExpansion(array, 4, 10, 4)
+    # array =  [[0, 0, 0, 0],              #  [ 0, 1, 2, 3 ]       shift = 0
+    #     [0, 0, 0, 0],              #  [ 5, 6, 7, 4 ]       shift = 1
+    #     [0, 0, 0, 0],            #  [ 10, 11, 8, 9 ]     shift = 2
+    #     [0, 0, 0, 0]]
+
+    key = [[0x2b, 0x7e, 0x15, 0x16],
+    [0x28, 0xae, 0xd2, 0xa6],
+    [0xab, 0xf7, 0x15, 0x88],
+    [0x09, 0xcf, 0x4f, 0x3c]]
+
+    array =  [[0x32, 0x43, 0xf6, 0xa8],              #  [ 0, 1, 2, 3 ]       shift = 0
+        [0x88, 0x5a, 0x30, 0x8d],             #  [ 5, 6, 7, 4 ]       shift = 1
+        [0x31, 0x31, 0x98, 0xa2],            #  [ 10, 11, 8, 9 ]     shift = 2
+        [0xe0, 0x37, 0x07, 0x34]]
+
+    result = keyExpansion(key, 4, 10, 4)
     array = addRoundKey(array, result, 0)
-    array = subBytes(array)
-    array = shiftRows(array)
-    array = mixColumns(array)
-    array = addRoundKey(array, result, 1)
-    
+    # for line in array:
+    #     elem = []
+    #     for elems in line:
+    #         elem.append(hex(elems))
+    #     print elem
+
+    for i in range(1, 10): 
+        print i
+        array = subBytes(array)
+        # for line in array:
+        #     elem = []
+        #     for elems in line:
+        #         elem.append(hex(elems))
+        #     print elem
+        array = shiftRows(array)
+        # for line in array:
+        #     elem = []
+        #     for elems in line:
+        #         elem.append(hex(elems))
+        #     print elem
+        array = mixColumns(array)
+        for line in array:
+            elem = []
+            for elems in line:
+                elem.append(hex(elems))
+            print elem
+            
+
+        array = addRoundKey(array, result, i)
+        # for line in array:
+        #     elem = []
+        #     for elems in line:
+        #         elem.append(hex(elems))
+        #     print elem
+
+        # do one last round outside the loop
+    array = addRoundKey(array, result, i)
+
+
+
 
 def encrypt(array):
     subBytes(array)
@@ -195,13 +241,11 @@ def keyExpansion(key, Nk, Nr, Nb):   # Nb = 4 size of word, Nr = 10, Nk = 4
                 temp[j] = sbox[temp[j]]
         newList = []
         for j in range(4):
-            newList.append(expandedKey[i-Nk][j] ^ temp[j])
+            val = expandedKey[i-Nk][j] ^ temp[j]
+            val = val
+            newList.append(val)
         expandedKey.append(newList)
         i = i + 1
-    # for line in expandedKey:
-    #     for i in range(len(line)):
-    #         line[i] = hex(line[i])
-    #     # print line
     return expandedKey
 
 
@@ -227,13 +271,31 @@ def addRoundKey(state, key, round):
     roundKey = []
     for i in range(4):
         roundKey.append(key[round * 4 + i])
+
+    for row in roundKey: 
+        rez = [[roundKey[j][i] for j in range(len(roundKey))] for i in range(len(roundKey[0]))]   
+    
+    for line in rez:
+        x = []
+        for elem in line:
+            x.append(hex(elem))
+        print x
+
     arr = []
     for i in range(4):
         currArr = []
         for j in range(4):
-            x = state[j][i] ^ roundKey[j][i]
-            currArr.append(x)
+            state[j][i] ^= rez[i][j]
+            print state[j][i]
+            currArr.append(state[j][i])
         arr.append(currArr)
+
+    # for row in arr:
+    #     x = []
+    #     for elem in row:
+    #         x.append(hex(elem))
+    #     print x
+
     return arr
     
 
