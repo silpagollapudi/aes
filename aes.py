@@ -74,15 +74,15 @@ rConTable = [
 #          [8, 9, 10, 11],            #  [ 10, 11, 8, 9 ]     shift = 2
 #          [12, 13, 14, 15]]          #  [ 15, 12, 13, 14 ]   shift = 3
 
-# array = [[43, 40, 171, 9],              #  [ 0, 1, 2, 3 ]       shift = 0
-#          [126, 174, 247, 207],              #  [ 5, 6, 7, 4 ]       shift = 1
-#          [21, 210, 21, 79],            #  [ 10, 11, 8, 9 ]     shift = 2
-#          [22, 166, 136, 60]]          #  [ 15, 12, 13, 14 ]   shift = 3
+array = [[43, 40, 171, 9],              #  [ 0, 1, 2, 3 ]       shift = 0
+         [126, 174, 247, 207],              #  [ 5, 6, 7, 4 ]       shift = 1
+         [21, 210, 21, 79],            #  [ 10, 11, 8, 9 ]     shift = 2
+         [22, 166, 136, 60]]          #  [ 15, 12, 13, 14 ]   shift = 3
 
-array =  [[0, 0, 0, 0],              #  [ 0, 1, 2, 3 ]       shift = 0
-         [0, 0, 0, 0],              #  [ 5, 6, 7, 4 ]       shift = 1
-         [0, 0, 0, 0],            #  [ 10, 11, 8, 9 ]     shift = 2
-         [0, 0, 0, 0]] 
+# array =  [[0, 0, 0, 0],              #  [ 0, 1, 2, 3 ]       shift = 0
+#          [0, 0, 0, 0],              #  [ 5, 6, 7, 4 ]       shift = 1
+#          [0, 0, 0, 0],            #  [ 10, 11, 8, 9 ]     shift = 2
+#          [0, 0, 0, 0]] 
 
 def main():
     # keysize = sys.argv[2]
@@ -106,13 +106,13 @@ def main():
     # expandKey(array, word, 2)
     # matrixList.append(array)
     result = keyExpansion(array, 4, 10, 4)
-    x = []
-    for i in range(len(result)):
-        g = []
-        for j in range(4):
-            g.append(hex(result[i][j]))
-        x.append(g)
-    # print x
+    # x = []
+    # for i in range(len(result)):
+    #     g = []
+    #     for j in range(4):
+    #         g.append(hex(result[i][j]))
+    #     x.append(g)
+    # # print x
 
 def encrypt(array):
     subBytes(array)
@@ -224,9 +224,9 @@ def keyExpansion(key, Nk, Nr, Nb):   # Nb = 4 size of word, Nr = 10, Nk = 4
     expandedKey = deepcopy(key)
     i = Nk
     temp = [0, 0, 0, 0]
-    expandedKey.append(temp)
     while (i < (Nb * (Nr + 1))):
-        temp = expandedKey[i]
+        t = expandedKey[i - 1]
+        temp = deepcopy(t)
         if i % Nk == 0:
             temp = subWord(rotWord(temp))
             temp = rCon(temp, i/Nk)
@@ -243,15 +243,6 @@ def keyExpansion(key, Nk, Nr, Nb):   # Nb = 4 size of word, Nr = 10, Nk = 4
             line[i] = hex(line[i])
         print line
     return expandedKey
-
-
-def expandKey(array, word, round):
-    newWord = rotWord(array, word)
-    newWord = subWord(newWord)
-    newWord = rCon(newWord, round)
-    array = XORrcon(newWord, array)
-    return array
-
 
 def rotWord(word):
     lastElement = word[0]
@@ -270,16 +261,6 @@ def subWord(word):
 def rCon(word, round):
     word[0] = word[0] ^ rConTable[round]
     return word
-
-def XORrcon(word, array):
-    for c in range(4):
-        for r in range(4):
-            array[r][c] = array[r][c] ^ word[r]
-            word[r] = array[r][c]
-    return array
-
-#  round constants
-#  01 02 04 08 10 20 40 80 1B 36 6C D8 AB 4D 9A
 
 
 if __name__ == "__main__":
