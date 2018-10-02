@@ -68,41 +68,53 @@ def main():
     mode = sys.argv[10]
     inpt = open(inputfile, "rb").read()
     key = open(keyfile, "rb").read()
-    print inpt
-    print key
-    
-    result = keyExpansion(array, 4, 10, 4)
-    # print result 
+    array = bytearray(inpt)
+    key = bytearray(key)
+
+    # convert array into 2d array
+    arr = [[0 for x in range(4)] for y in range(4)]
+    keyarray = [[0 for x in range(4)] for y in range(4)]
+
+    counter = 0
+    for i in range(4):
+        for j in range(4):
+            arr[i][j] = array[counter]
+            counter += 1
+
+    counter = 0
+    for i in range(4):
+        for j in range(4):
+            keyarray[i][j] = key[counter]
+            counter += 1
+
+    result = keyExpansion(keyarray, 4, 10, 4)
+
     for i in range(10):
         x = deepcopy(result)
 
-        array = addRoundKey(array, x, i)
-        # print "after addRoundKey round " + str(i)
-        printInHex(array)
+        arr = addRoundKey(arr, x, i)
 
-        array = subBytes(array)
-        # print "after subBytes round " + str(i)
-        printInHex(array)
+        arr = subBytes(arr)
 
-        array = shiftRows(array)
-        # print "after shiftRows round " + str(i)
-        printInHex(array)
+        arr = shiftRows(arr)
 
         if i != 9:
-            array = mixColumns(array)
-            # print "after mixColumns round " + str(i)
-            printInHex(array)
+            arr = mixColumns(arr)
 
-    array = addRoundKey(array, x, 10)
-    # print "after addRoundKey round " + str(i)
-    printInHex(array)
+    arr = addRoundKey(arr, x, 10)
+
+    outputfile = open(outputfile, "wb")
+    for i in arr:
+        for j in i:
+            outputfile.write(str(j))
+
 
 def printInHex(arr):
     x = ""
     for i in range(4):
         for j in range(4):
             x = x + hex(arr[j][i]) + " "
-    # print x   
+    print x   
 
 def encrypt(array):
     subBytes(array)
@@ -230,20 +242,11 @@ def addRoundKey(state, key, round):
     for i in range(4):
         roundKey.append(key[round * 4 + i])
     arr = []
-    if round == 2:
-        p = True
-        # print roundKey
-        # print state
     for j in range(4):
         currArr = []
         for i in range(4):
             x = state[i][j] ^ roundKey[j][i]
             currArr.append(x)
-            if round == 2:
-                continue
-                # print state[i][j]
-                # print roundKey[j][i]
-                # print hex(x)
         arr.append(currArr)
     g = deepcopy(arr)
     for i in range(4):
