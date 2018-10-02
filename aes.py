@@ -54,10 +54,18 @@ def main():
 
     numBytes = sys.argv[2]
     keyfile = sys.argv[4]
-    inputfile = sys.argv[6]
+    inputfilename = sys.argv[6]
     outputfile = sys.argv[8]
     mode = sys.argv[10]
-    inpt = open(inputfile, "rb").read()
+
+    inputfile = bytes([ 0 for i in range(16)] )
+    f = open(inputfilename, "wb")
+    f.write(inputfile)
+
+    length = 16 - (len(inputfile) % 16)
+    inputfile += bytes([length]) * length
+
+    inpt = open(inputfilename, "rb").read()
     key = open(keyfile, "rb").read()
     array = bytearray(inpt)
     key = bytearray(key)
@@ -82,16 +90,11 @@ def main():
 
     for i in range(10):
         x = deepcopy(result)
-
         arr = addRoundKey(arr, x, i)
-
         arr = subBytes(arr)
-
         arr = shiftRows(arr)
-
         if i != 9:
             arr = mixColumns(arr)
-
     arr = addRoundKey(arr, x, 10)
 
     outputfile = open(outputfile, "wb")
