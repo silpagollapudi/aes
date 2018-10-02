@@ -58,12 +58,14 @@ def main():
     outputfile = sys.argv[8]
     mode = sys.argv[10]
 
-    inputfile = bytes([ 0 for i in range(16)] )
-    f = open(inputfilename, "wb")
-    f.write(inputfile)
+    # couldn't get padding working
+    
+    # inputfile = bytes([ 0 for i in range(16)])
+    # f = open(inputfilename, "wb")
+    # f.write(inputfile)
 
-    length = 16 - (len(inputfile) % 16)
-    inputfile += bytes([length]) * length
+    # length = 16 - (len(inputfile) % 16)
+    # inputfile += bytes([length]) * length
 
     inpt = open(inputfilename, "rb").read()
     key = open(keyfile, "rb").read()
