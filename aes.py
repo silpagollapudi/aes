@@ -49,17 +49,8 @@ rConTable = [
     0xD4, 0xB3, 0x7D, 0xFA, 0xEF, 0xC5, 0x91, 0x39
     ]
 
-array = [[0, 0, 0, 0],              #  [ 0, 1, 2, 3 ]       shift = 0
-        [0, 0, 0, 0],              #  [ 5, 6, 7, 4 ]       shift = 1
-        [0, 0, 0, 0],            #  [ 10, 11, 8, 9 ]     shift = 2
-        [0, 0, 0, 0]] 
 
 def main():
-
-    array =  [[0, 0, 0, 0],              #  [ 0, 1, 2, 3 ]       shift = 0
-        [0, 0, 0, 0],              #  [ 5, 6, 7, 4 ]       shift = 1
-        [0, 0, 0, 0],            #  [ 10, 11, 8, 9 ]     shift = 2
-        [0, 0, 0, 0]]
 
     numBytes = sys.argv[2]
     keyfile = sys.argv[4]
