@@ -59,7 +59,7 @@ def main():
     mode = sys.argv[10]
 
     # couldn't get padding working
-    
+
     # inputfile = bytes([ 0 for i in range(16)])
     # f = open(inputfilename, "wb")
     # f.write(inputfile)
@@ -69,6 +69,7 @@ def main():
 
     inpt = open(inputfilename, "rb").read()
     key = open(keyfile, "rb").read()
+    
     array = bytearray(inpt)
     key = bytearray(key)
 
